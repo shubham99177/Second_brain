@@ -90,7 +90,10 @@ export const createcontent = async (req: any, res: any, next: any) => {
     res.json({
       message: "Content added",
     });
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
+  res.json({ message: "Content added" });
 };
 
 export const deleteContent = async (req: any, res: any, next: any) => {
@@ -166,6 +169,19 @@ export const getsharelinkdata = async (req: any, res: any, next: any) => {
     console.log(content);
 
     res.json({ message: "data", content });
+  } catch (error) {
+    console.error("Error fetching share link data:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const getallcontent = async (req: any, res: any, next: any) => {
+  // console.log(` user ID ${req.user.userId}`);
+  try {
+    const content = await Content.find({ userId: req.user.userId });
+
+    res.json({ message: "data", content });
+    console.log("try");
   } catch (error) {
     console.error("Error fetching share link data:", error);
     res.status(500).json({ message: "Internal server error" });
