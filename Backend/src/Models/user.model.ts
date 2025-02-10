@@ -6,6 +6,8 @@ import Jwt from "jsonwebtoken";
 export interface IUser extends Document {
   username: string;
   password: string;
+  providerId: string;
+  provider: string;
   comparePassword(password: string): Promise<boolean>;
   generateToken(): string; // Add the method to the interface
 }
@@ -15,13 +17,13 @@ const userSchema = new Schema<IUser>(
   {
     username: {
       type: String,
-      required: [true, "Username is required"],
       unique: true,
     },
     password: {
       type: String,
-      required: true,
     },
+    providerId: String, // Store OAuth provider ID
+    provider: String, // Store OAuth provider
   },
   { timestamps: true }
 );
@@ -46,7 +48,7 @@ userSchema.methods.generateToken = function (): string {
   return Jwt.sign(
     { userId: this._id },
     process.env.JWT_SECRET as string, // Ensure this is defined in your environment variables
-    { expiresIn: "1h" }
+    { expiresIn: "7d" }
   );
 };
 

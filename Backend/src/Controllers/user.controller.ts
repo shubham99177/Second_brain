@@ -17,7 +17,7 @@ export const signup = async (req: any, res: any, next: any) => {
   try {
     const { username, password } = req.body;
 
-    console.log(username, password);
+    // console.log(username, password);
 
     const error: Message | null = uservalidater(username, password);
 
@@ -59,7 +59,7 @@ export const signin = async (req: any, res: any, next: any) => {
 
     const token = user.generateToken();
     // Uncomment if token logic is implemented
-    console.log(token);
+    // console.log(token);
 
     return res
 
@@ -79,16 +79,16 @@ export const createcontent = async (req: any, res: any, next: any) => {
   try {
     const link = req.body.link;
     const type = req.body.type;
+    const tags = req.body.tags;
+
+    const tages = await Tag.create({ title: tags });
+    console.log(tages);
     await Content.create({
       link,
       type,
       title: req.body.title,
       userId: req.user.userId,
       tags: [],
-    });
-
-    res.json({
-      message: "Content added",
     });
   } catch (error) {
     console.log(error);
@@ -150,7 +150,7 @@ export const getsharelink = async (req: any, res: any, next: any) => {
     )}/users/brain/${hash}`;
 
     res.status(200).json({
-      link: shareableLink,
+      hash: hash,
     });
   } catch (error) {
     console.error("Error creating shareable link:", error);
@@ -179,11 +179,10 @@ export const getallcontent = async (req: any, res: any, next: any) => {
   // console.log(` user ID ${req.user.userId}`);
   try {
     const content = await Content.find({ userId: req.user.userId });
+    // console.log(content);
 
     res.json({ message: "data", content });
-    console.log("try");
   } catch (error) {
     console.error("Error fetching share link data:", error);
-    res.status(500).json({ message: "Internal server error" });
   }
 };

@@ -27,5 +27,5 @@ export function useContent() {
         }
     }, [])
 
-    return {contents, refresh};
+    return { contents, refresh };
 }
